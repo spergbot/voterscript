@@ -10,9 +10,13 @@ line = file.readline()
 while line:
     [firstname, lastname, year, zipcode] = line.split(',')
     url = "https://obits.mlive.com/obituaries/annarbor/obituary-search.aspx?daterange=99999&firstname=%s&lastname=%s&keyword=%s&countryid=1&stateid=26&affiliateid=all"%(firstname,lastname,year)
-    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
-    while (response.status_code != 200):
-        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
+    while True:
+        try:
+            response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
+            if response.status_code == 200:
+                break
+        except Exception:
+            print("Error... trying again")
     content = str(response.content)
     if "did not find any obituaries in this newspaper." not in content:
         print(firstname, lastname + " IS DEAD.")
